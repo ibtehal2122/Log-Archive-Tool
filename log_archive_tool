@@ -1,0 +1,55 @@
+#!/bin/bash
+#log_archive_tool
+#Usage: log-archive <log-directory>
+echo "=== Starting Log Archive ==="
+# step1: check if user provided a directory
+if [ "$1"= ""]; then
+echo "Error: please provide a directory"
+echo "Example: ./log_archive  /var/log"
+exit 1
+fi
+# step2: check if user provided a directory
+log_dir= $1
+ecjho "Log_directory: $log_dir"
+# step3: check if directory exists
+if [ -d "$log_dir" ]; then
+echo "Error: directory $log_dir does not exist!"
+exit 1
+fi
+echo "Directory $log_dir exists"
+echo "Creating archive folder:"
+mkdir -p archives
+# step4: create a timestamp for the file name
+Timestamp =$(date + "%Y%m%d_%H%M%S")
+echo "Timestamp: $Timestamp"
+# step5: create archive filename:
+Archive_name= "log_backup_$Timestamp.tar.gz"
+echo "Archive name: $Archive_name"
+# step6: compress directory:
+echo "Compressing $LOG_DIR..."
+tar -czf "archives/$Archive_name" "$lod_dir"
+# step7: check if compression succeeded:
+if [ -f "archives/$log_dir"]; then
+echo "SUCCESS: Archive created!"
+else
+    echo "ERROR: Failed to create archive"
+    exit 1
+fi
+# step8: Remove old logs:
+echo "Cleaning up old log files..."
+find "$log_dir" -name "*.log" -type -f -mtime +7 -delete
+# step9: Show what was deleted:
+echo "Deleted log files older than 7 days:"
+find "$log_dir" -name "*.log" -type -f -mtime +7 
+# step10: show archive size:
+echo "Archive size :"
+ls -lh "arhives/$Archive_name"
+# step9: check if compression succeeded:
+# step11: Log the Activity:
+echo "$(date) -Archived: $log_dir to $arhives" >> archives/archives_history.txt
+echo "$(date) -Cleaned: Removed old .log files from $log_dir >> archives/archives_history.txt
+
+echo "=== Archive Complete ==="
+echo "File: my_archives/$ARCHIVE_NAME"
+echo "Log: my_archives/archive_history.txt"
+echo "Cleaned: Removed old .log files"
